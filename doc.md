@@ -1869,9 +1869,157 @@ docker run -d \
       
     
 - **`ENV WORDPRESS_DB_*`**: Pre-configures the environment variables WordPress uses internally to connect to the database automatically upon startup.
-    
-      
-    
+
+===============
+If you want to build a pure Python image **without web frameworks** (like Flask or Django) or extra web server dependencies, here is the clean, minimal step-by-step workflow.
+
+---
+
+1. **1. Install Docker Desktop:** Prerequisite.
+Ensure **Docker Desktop** is installed and running on your computer.
+
+
+2. **2. Create Python Script & Dockerfile:** Local Project Setup.
+Create a new folder on your PC and add two files inside it:
+
+**File 1: `main.py**` *(Your Python script)*
+
+```python
+import sys
+import platform
+
+def main():
+    print("----------------------------------------")
+    print(f"Python Version: {platform.python_version()}")
+    print(f"Operating System: {platform.system()} {platform.release()}")
+    print("Pure Python Docker Image Executed Successfully!")
+    print("----------------------------------------")
+
+if __name__ == "__main__":
+    main()
+
+```
+
+**File 2: `Dockerfile**` *(No file extension)*
+
+```dockerfile
+# 1. Start from official minimal Python base image
+FROM python:3.11-slim
+
+# 2. Set working directory inside container
+WORKDIR /app
+
+# 3. Copy python script into container
+COPY main.py .
+
+# 4. Command executed when container starts
+CMD ["python", "main.py"]
+
+```
+
+
+3. **3. Build the Python Image:** CLI Step.
+Open your terminal/command prompt, navigate (`cd`) into your project folder, and run:
+
+```bash
+docker build -t pure-python-app .
+
+```
+
+
+4. **4. Run the Python Container Locally:** CLI Step.
+Run a container using the image you just built:
+
+```bash
+docker run --name my-python-run pure-python-app
+
+```
+
+*Verification:* The terminal will output the Python version, operating system details, and exit once the script finishes executing.
+
+
+5. **5. Push Image to Docker Hub:** Distribution Step.
+Prepare and upload your pure Python image to Docker Hub:
+
+```bash
+# Log in to Docker Hub
+docker login
+
+# Tag local image with your Docker Hub username
+docker tag pure-python-app <your-dockerhub-username>/pure-python-app:v1.0
+
+# Push image to Docker Hub
+docker push <your-dockerhub-username>/pure-python-app:v1.0
+
+```
+
+
+6. **6. Run Image on Any Machine:** Production Step.
+On any computer or server with Docker installed, pull and execute your script directly from Docker Hub:
+
+```bash
+docker run <your-dockerhub-username>/pure-python-app:v1.0
+
+```
+
+
+---
+
+### Line-by-Line Breakdown
+
+* **`FROM python:3.11-slim`**: Downloads a lightweight Linux distribution with Python 3.11 pre-installed. Using `-slim` minimizes image size by excluding unnecessary build tools.
+* **`WORKDIR /app`**: Sets the default execution path inside the container to `/app`.
+* **`COPY main.py .`**: Transfers `main.py` from your PC into `/app` inside the container image.
+* **`CMD ["python", "main.py"]`**: Executes `python main.py` as the entry process when the container launches.
+
+---
+===============================
+
+  **Run a Container**
+
+| Command / Syntax | Description / Behavior |
+| --- | --- |
+| `docker run -d -it <container name>` | Runs a container in detached mode with interactive terminal support |
+| `docker run ubuntu` | Starts a container but it immediately stops (no interactive process running) |
+| `docker ps` | Lists all currently running containers |
+| `docker run -it ubuntu` | Runs container in interactive mode; stays active until you exit the terminal |
+| `docker run -dit ubuntu` | Runs container in background (detached mode); continues running even after exiting terminal |
+| `docker exec -it <container id> /bin/bash` | Opens an interactive terminal inside a running container |
+
+---
+
+**Ready Docker Images**
+
+| Image | Use | Example Command |
+| --- | --- | --- |
+| `ubuntu` | Base OS | `docker run -it ubuntu` |
+| `nginx` | Web server | `docker run -d -p 80:80 nginx` |
+| `mysql` | Database | `docker run -d -e MYSQL_ROOT_PASSWORD=1234 mysql` |
+| `mongo` | NoSQL DB | `docker run -d -p 27017:27017 mongo` |
+| `python` | Runtime | `docker run -it python` |
+
+---
+
+**Docker Image Commands**
+
+| Command | Purpose | Example |
+| --- | --- | --- |
+| `docker pull <image>` | Download image from Docker Hub | `docker pull ubuntu` |
+| `docker images` | List all downloaded images | `docker images` |
+| `docker rmi <image>` | Remove an image | `docker rmi ubuntu` |
+
+---
+
+**docker prune – Containers**
+
+| Step | Command | What happens |
+| --- | --- | --- |
+| 1 | `docker run -d --name c1 nginx` | Container c1 created |
+| 2 | `docker run -d --name c2 nginx` | Container c2 created |
+| 3 | `docker stop c1 c2` | Both containers stopped |
+| 4 | `docker ps -a` | Shows c1, c2 (stopped) |
+| 5 | `docker container prune` | Deletes **ALL stopped containers** |
+| 6 | `docker ps -a` | No stopped containers should appear |
 - **`docker network create`**: Creates a internal virtual bridge so containers can communicate directly using their container names (`mysql-db` or `prod-db`) as domain hostnames.
     
       
