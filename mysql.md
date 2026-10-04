@@ -926,7 +926,7 @@
 > # Database Connection
 >
 > # mysql connection 
-
+```
 import pymysql as zz
 
 def displayAllStudents():
@@ -1072,9 +1072,10 @@ finally:
     if conn:
         conn.close()
 
+```
 
 # Procedure
-
+```
 DELIMITER //
 
 CREATE PROCEDURE getsstudentcount(
@@ -1089,3 +1090,4 @@ BEGIN
 END //
 
 DELIMITER ;
+```
