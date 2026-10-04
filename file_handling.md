@@ -403,3 +403,50 @@
 > with open("file.txt", "r", encoding="utf-8") as f:
 >     data = f.read()
 > ```
+>
+> ======================================================================================
+>
+ ```
+> # file handling in
+
+
+
+fh=open("employeeinfo.txt")
+fh1=open("employeedata.txt","w")
+for line in fh:
+    print(line)
+    lst=line.split(",")
+    print(lst[0],lst[1])
+    ln=":".join(lst)
+    fh1.write(ln)
+fh.close()
+fh1.close()
+
+try: 
+    fh=open("employeeinfo111.txt")
+    fh1=open("employeedata.txt","w")
+    for line in fh:
+        print(line)
+        lst=line.split(",")
+        print(lst[0],lst[1])
+        if lst[3]=='Admin':
+            ln=":".join(lst)
+            fh1.write(ln)
+    
+except FileNotFoundError as e:
+    print(e)
+finally:
+    fh.close()
+    fh1.close()
+    
+    
+with open("employeeinfo.txt") as fh:
+    with open("empcopy.txt","w") as fh1:
+        for line in fh:
+            print(line)
+            fh1.write(line)
+    
+    
+
+
+```
