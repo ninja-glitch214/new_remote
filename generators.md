@@ -76,3 +76,96 @@
 > 
 > Decorator → "Add behavior around my function."
 > ```
+>
+> =========================================================================
+>
+```
+def mynumbers():
+    yield 1
+    yield 2
+    yield 3
+    yield 4
+    yield 5
+    
+def mynumbers1():
+    for i in range(1,6):
+        yield i
+        
+        
+        
+        
+g=mynumbers()
+print(type(g))
+
+
+
+
+print(next(g))
+
+
+for i in mynumbers():
+    print(i)
+    
+    
+    
+    
+    
+print(mynumbers1())
+
+
+
+def myf1():
+    with open ("employeeinfo.txt") as fh:
+        for ln in fh:
+            yield ln
+            
+e=myf1()            
+print(e)            
+
+
+
+
+
+
+
+#%%
+
+
+#decorator
+
+
+def logging():
+    print("in loggingunction")
+    
+def validateusr():
+    print("in validateuser")
+    
+
+def mydecorator(f):
+    def innerfunction(*t,**kwarg):
+        logging()
+        validateusr()
+        print("in mydecorator")
+        print("-"*80)
+        z=f(*t,**kwarg)
+        print("exiting from mydecorator")
+        return z
+    return innerfunction
+    
+    
+
+@mydecorator     #mydecorator(f1)  #innerfunction(*t,**kwarg)
+def f1(x,y,**kw):
+    print("in f1()",x,y,kw)
+    return x+10
+
+@mydecorator #mydecorator(f2)
+def f2():
+    print("in f2()")
+    
+
+print(f1(10,20,a=34,b=35))
+f2()
+
+
+```
